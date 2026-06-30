@@ -54,6 +54,25 @@ export async function register(username: string, email: string, password: string
 
 export async function logout() {
   const cookieStore = await cookies();
+  const refreshToken = cookieStore.get("refresh_token")?.value;
+  const accessToken = cookieStore.get("access_token")?.value;
+
+  if (refreshToken && accessToken) {
+    try {
+      await fetch(`${BACKEND_URL}/api/v1/auth/logout/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ refresh: refreshToken }),
+      });
+    } catch {
+      // Network or server error — proceed to clear cookies regardless.
+      // The refresh token will simply expire naturally if it wasn't blacklisted.
+    }
+  }
+
   cookieStore.delete("access_token");
   cookieStore.delete("refresh_token");
 }
