@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "users",
+    "generate",
 ]
 
 AUTH_USER_MODEL = "users.User"
@@ -95,6 +96,13 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = "static/"
+
+# Media files (user uploads and generated results)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# Internal service URLs
+CV_SERVICE_URL = env("CV_SERVICE_URL")
 
 # REST Framework
 REST_FRAMEWORK = {
